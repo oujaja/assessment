@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,17 +32,26 @@ public class LottoService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public Lotto createAdminLotto(@Valid LottoRequest lottoRequest) {
+    public Lotto createAdminLotto(LottoRequest lottoRequest) {
+        String ticket = lottoRequest.getTicket();
+        int price = lottoRequest.getPrice();
+        int amount = lottoRequest.getAmount();
 
+        // Check for duplicate lottery IDs
+        Optional<Lotto> existingLottos = lottoRepository.findByTicket(ticket);
+        if (existingLottos.isPresent()) {
+            throw new IllegalArgumentException("Duplicate lottery ID found.");
+        }
 
         Lotto lotto = new Lotto();
         lotto.setTicket(lottoRequest.getTicket());
         lotto.setPrice(lottoRequest.getPrice());
         lotto.setAmount(1);
         lottoRepository.save(lotto);
-        return null;
+        return lotto;
     }
+
+
 
     public void deleteLottoById(Integer id) {
         lottoRepository.deleteById(Long.valueOf(id));

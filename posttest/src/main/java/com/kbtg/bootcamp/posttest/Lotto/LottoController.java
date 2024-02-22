@@ -4,6 +4,7 @@ package com.kbtg.bootcamp.posttest.Lotto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -39,14 +40,23 @@ public class LottoController {
 
 
     @PostMapping("")  //create admin service
-    public Lotto createUser(@Valid @RequestBody LottoRequest lottoRequest) throws Exception {
-        return lottoService.createAdminLotto(lottoRequest);
+    public ResponseEntity<?> createUser(@Valid @RequestBody LottoRequest lottoRequest) {
+        try {
+            Lotto newLotto = lottoService.createAdminLotto(lottoRequest);
+            return ResponseEntity.ok().body(newLotto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Integer id) {
         this.lottoService.deleteLottoById(id);
         return "Yaahoo";
     }
+
+
+
 /*
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {

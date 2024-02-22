@@ -9,9 +9,5 @@ import java.util.Optional;
 @Repository
 
 public interface LottoRepository extends JpaRepository<Lotto, Long> {
-
-    @Query("SELECT MAX(l.id) FROM Lotto l")
-    Integer findMaxId();
-
     Optional<Lotto> findByTicket(String ticketId);
 }

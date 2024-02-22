@@ -1,6 +1,8 @@
 package com.kbtg.bootcamp.posttest.User;
 
 
+import com.kbtg.bootcamp.posttest.Exception.BadRequestException;
+import com.kbtg.bootcamp.posttest.Exception.NotFoundException;
 import com.kbtg.bootcamp.posttest.UserTicketLotto.UserTicketLotto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +27,12 @@ public class UserController {
     @GetMapping("/{userId}/lotteries")
     public ResponseEntity<Map<String, Object>> getAllLotteriesByUser(@PathVariable String userId) {
         Map<String, Object> response = userService.getAllUserLotteries(userId);
+        if (userId.length() != 10) {
+            throw new BadRequestException("Invalid user ID. Length should be 10.");
+        }
+
         if (response.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new NotFoundException("No User ID "+userId);
         }
 
         return ResponseEntity.ok().body(response);
@@ -44,11 +50,23 @@ public class UserController {
 
     @PostMapping("/{userId}/lotteries/{ticketId}")
     public ResponseEntity<?> buyLotteryTicket(@PathVariable String userId, @PathVariable String ticketId) {
+        if (userId.length() != 10) {
+            throw new BadRequestException("Invalid user ID. Length should be 10.");
+        }
+        if (ticketId.length() != 6) {
+            throw new BadRequestException("Invalid ticket ID. Length should be 6.");
+        }
         return userService.buyLotteryTicket(userId, ticketId);
     }
 
     @DeleteMapping("/{userId}/lotteries/{ticketId}")
     public ResponseEntity<?> cancelPurchase(@PathVariable String userId, @PathVariable String ticketId) {
+        if (userId.length() != 10) {
+            throw new BadRequestException("Invalid user ID. Length should be 10.");
+        }
+        if (ticketId.length() != 6) {
+            throw new BadRequestException("Invalid ticket ID. Length should be 6.");
+        }
         return userService.cancelPurchase(userId, ticketId);
     }
 }

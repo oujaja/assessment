@@ -1,6 +1,9 @@
 package com.kbtg.bootcamp.posttest.Lotto;
 
+import com.kbtg.bootcamp.posttest.Exception.BadRequestException;
+import com.kbtg.bootcamp.posttest.Exception.InternalException;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,16 +23,26 @@ public class LottoService {
         this.lottoRepository = lottoRepository;
     }
 
+
+
     public List<Lotto> getLottoList() {
-        List<Lotto> lottoList = lottoRepository.findAll();
-        return lottoList;
+        try {
+            List<Lotto> lottoList = lottoRepository.findAll();
+            return lottoList;
+        } catch (Exception e) {
+            throw new InternalException("Internal server error occurred");
+        }
     }
 
     public List<String> getTickets() {
-        List<Lotto> lottoList = lottoRepository.findAll();
-        return lottoList.stream()
-                .map(Lotto::getTicket)
-                .collect(Collectors.toList());
+        try {
+            List<Lotto> lottoList = lottoRepository.findAll();
+            return lottoList.stream()
+                    .map(Lotto::getTicket)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new InternalException("Internal Server Error occurred ");
+        }
     }
 
     public Lotto createAdminLotto(LottoRequest lottoRequest) {
@@ -40,7 +53,7 @@ public class LottoService {
         // Check for duplicate lottery IDs
         Optional<Lotto> existingLottos = lottoRepository.findByTicket(ticket);
         if (existingLottos.isPresent()) {
-            throw new IllegalArgumentException("Duplicate lottery ID found.");
+            throw new BadRequestException("Duplicate lottery ID found.");
         }
 
         Lotto lotto = new Lotto();

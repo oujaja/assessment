@@ -1,5 +1,7 @@
 package com.kbtg.bootcamp.posttest.User;
 
+import com.kbtg.bootcamp.posttest.Exception.BadRequestException;
+import com.kbtg.bootcamp.posttest.Exception.NotFoundException;
 import com.kbtg.bootcamp.posttest.Lotto.Lotto;
 import com.kbtg.bootcamp.posttest.Lotto.LottoRepository;
 import com.kbtg.bootcamp.posttest.User.UserRepository;
@@ -57,15 +59,15 @@ import java.util.*;
         Optional<User> userOptional = userRepository.findById(userId);
         Optional<Lotto> lottoOptional = lottoRepository.findByTicket(ticketId);
 
-        if (userOptional.isPresent() && lottoOptional.isPresent()) {
-            UserTicketLotto userTicketLotto = new UserTicketLotto();
-            userTicketLotto.setUserTicketId(userId);
-            userTicketLotto.setLotteryId(ticketId);
-            userTicketLottoRepository.save(userTicketLotto);
-            return ResponseEntity.ok().body("Purchase successful");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or lottery not found");
+        if (userOptional.isEmpty() || lottoOptional.isEmpty()) {
+            throw new BadRequestException("User or lottery not exist");
         }
+
+        UserTicketLotto userTicketLotto = new UserTicketLotto();
+        userTicketLotto.setUserTicketId(userId);
+        userTicketLotto.setLotteryId(ticketId);
+        userTicketLottoRepository.save(userTicketLotto);
+        return ResponseEntity.ok().body("Purchase successful");
     }
 
     @Transactional
@@ -77,7 +79,7 @@ import java.util.*;
             userTicketLottoRepository.delete(userTicketLottoToDelete);
             return ResponseEntity.ok().body("Purchase canceled successfully");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No purchase found for user " + userId + " and ticket " + ticketId);
+            throw new BadRequestException("UserID "+userId+" don't have"+" lottery number "+ticketId);
         }
     }
 }

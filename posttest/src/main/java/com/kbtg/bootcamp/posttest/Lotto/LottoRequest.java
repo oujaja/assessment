@@ -12,9 +12,6 @@ public class LottoRequest {
     }
 
     public void setTicket(String ticket) {
-        if (ticket.length() != 6) {
-            throw new IllegalArgumentException("Invalid lottery length. Expected length is 6.");
-        }
         this.ticket = ticket;
     }
 

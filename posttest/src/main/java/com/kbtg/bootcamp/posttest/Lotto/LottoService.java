@@ -1,67 +1,65 @@
 package com.kbtg.bootcamp.posttest.Lotto;
 
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+
+import java.util.List;
+
 import java.util.stream.Collectors;
 
 @Service
+
 public class LottoService {
-    private List<Lotto> lottoList = new ArrayList<>(
-            List.of(new Lotto(1,"000001",80),
-                    new Lotto(2,"000002",80),
-                    new Lotto(3,"123456",80))
-    );
+
+    private final LottoRepository lottoRepository;
+
+    public LottoService(LottoRepository lottoRepository) {
+        this.lottoRepository = lottoRepository;
+    }
 
     public List<Lotto> getLottoList() {
+        List<Lotto> lottoList = lottoRepository.findAll();
         return lottoList;
     }
 
-    public Map<String, List<String>> getTickets() {
-        List<String> tickets = lottoList.stream()
+    public List<String> getTickets() {
+        List<Lotto> lottoList = lottoRepository.findAll();
+        return lottoList.stream()
                 .map(Lotto::getTicket)
                 .collect(Collectors.toList());
-
-        Map<String, List<String>> ticketList = new HashMap<>();
-        ticketList.put("tickets", tickets);
-        return ticketList;
     }
 
+    @Transactional
+    public Lotto createAdminLotto(@Valid LottoRequest lottoRequest) {
 
 
-
-
-    public Lotto createLotto(LottoRequestDto requestDto) throws Exception {
-        Optional<Integer> maxId = lottoList.stream()
-                .map(Lotto::getId)
-                .max(Integer::compareTo);
-        int nextId = maxId.orElse(0) + 1;
-        Lotto lotto = new Lotto(nextId,requestDto.ticket(),requestDto.price());
-
-        lottoList.add(lotto);
-        return lotto;
+        Lotto lotto = new Lotto();
+        lotto.setTicket(lottoRequest.getTicket());
+        lotto.setPrice(lottoRequest.getPrice());
+        lotto.setAmount(1);
+        lottoRepository.save(lotto);
+        return null;
     }
 
-
-
-    public void deleteLottoById(@PathVariable Integer id) {
-       lottoList.removeIf(user1 -> user1.getId().equals(id));
-    }
-
-    public void editLottoById(Integer id, LottoRequestDto requestDto) {
-        for (Lotto lotto: lottoList) {
-            if (lotto.getId().equals(id)) {
-                lotto.setTicket(requestDto.ticket());
-                break;
-            }
-        }
+    public void deleteLottoById(Integer id) {
+        lottoRepository.deleteById(Long.valueOf(id));
     }
 }
 
 
+/*
+    public void deleteLottoById(Integer id) {
+        lottoRepository.deleteById(Long.valueOf(id));
+    }
 
-
+    public void editLottoById(Integer id, LottoRequestDto requestDto) {
+        Optional<Lotto> optionalLotto = lottoRepository.findById(Long.valueOf(id));
+        optionalLotto.ifPresent(lotto -> {
+            lotto.setTicket(requestDto.ticket());
+            lotto.setPrice(requestDto.price());
+            lottoRepository.save(lotto);
+        });
+    }
+}*/

@@ -25,6 +25,10 @@ public class UserTicketLotto {
         this.lottery_id = lottery_id;
     }
 
+    public UserTicketLotto() {
+
+    }
+
     public Integer getId() {
         return id;
     }

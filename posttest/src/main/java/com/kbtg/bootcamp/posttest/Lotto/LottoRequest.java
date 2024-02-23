@@ -31,5 +31,9 @@ public class LottoRequest {
         this.amount = amount;
     }
 
-
+    public LottoRequest(String ticket, int price, int amount) {
+        this.ticket = ticket;
+        this.price = price;
+        this.amount = amount;
+    }
 }

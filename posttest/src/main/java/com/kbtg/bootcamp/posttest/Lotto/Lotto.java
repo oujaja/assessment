@@ -40,6 +40,7 @@ public class Lotto {
         this.id = id;
         this.ticket = ticket;
         this.price = price;
+
     }
 
 

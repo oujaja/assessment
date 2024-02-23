@@ -24,7 +24,7 @@ public class LottoService {
     }
 
 
-
+    //for checking only
     public List<Lotto> getLottoList() {
         try {
             List<Lotto> lottoList = lottoRepository.findAll();
@@ -65,24 +65,10 @@ public class LottoService {
     }
 
 
-
+    //addition feature
     public void deleteLottoById(Integer id) {
         lottoRepository.deleteById(Long.valueOf(id));
     }
 }
 
 
-/*
-    public void deleteLottoById(Integer id) {
-        lottoRepository.deleteById(Long.valueOf(id));
-    }
-
-    public void editLottoById(Integer id, LottoRequestDto requestDto) {
-        Optional<Lotto> optionalLotto = lottoRepository.findById(Long.valueOf(id));
-        optionalLotto.ifPresent(lotto -> {
-            lotto.setTicket(requestDto.ticket());
-            lotto.setPrice(requestDto.price());
-            lottoRepository.save(lotto);
-        });
-    }
-}*/

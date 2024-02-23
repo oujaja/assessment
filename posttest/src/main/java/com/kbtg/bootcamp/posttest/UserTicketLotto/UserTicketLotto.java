@@ -19,6 +19,12 @@ public class UserTicketLotto {
     private String  lottery_id;
 
 
+    public UserTicketLotto(Integer id, String user_ticket_id, String lottery_id) {
+        this.id = id;
+        this.user_ticket_id = user_ticket_id;
+        this.lottery_id = lottery_id;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -43,7 +49,5 @@ public class UserTicketLotto {
         this.lottery_id = lottery_id;
     }
 
-
 }
 
-//add getter setter and repo

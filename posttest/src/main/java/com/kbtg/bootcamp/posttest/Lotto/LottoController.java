@@ -54,20 +54,6 @@ public class LottoController {
         return "Yaahoo";
     }
 
-
-
-/*
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
-        lottoService.deleteLottoById(id);
-    }
-
-    @PutMapping("/{id}")
-    public void editLotto(@PathVariable Integer id, @RequestBody LottoRequestDto requestDto) {
-        lottoService.editLottoById(id, requestDto);
-    }
-
- */
 }
 
 

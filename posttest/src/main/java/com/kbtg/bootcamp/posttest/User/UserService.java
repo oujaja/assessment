@@ -1,18 +1,16 @@
 package com.kbtg.bootcamp.posttest.User;
 
 import com.kbtg.bootcamp.posttest.Exception.BadRequestException;
-import com.kbtg.bootcamp.posttest.Exception.NotFoundException;
+
 import com.kbtg.bootcamp.posttest.Lotto.Lotto;
 import com.kbtg.bootcamp.posttest.Lotto.LottoRepository;
-import com.kbtg.bootcamp.posttest.User.UserRepository;
+
 import com.kbtg.bootcamp.posttest.UserTicketLotto.UserTicketLotto;
 import com.kbtg.bootcamp.posttest.UserTicketLotto.UserTicketLottoRepository;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.*;
 
@@ -63,9 +61,7 @@ import java.util.*;
             throw new BadRequestException("User or lottery not exist");
         }
 
-        UserTicketLotto userTicketLotto = new UserTicketLotto();
-        userTicketLotto.setUserTicketId(userId);
-        userTicketLotto.setLotteryId(ticketId);
+        UserTicketLotto userTicketLotto = new UserTicketLotto(null, userId, ticketId);
         userTicketLottoRepository.save(userTicketLotto);
         return ResponseEntity.ok().body("Purchase successful");
     }
@@ -79,7 +75,7 @@ import java.util.*;
             userTicketLottoRepository.delete(userTicketLottoToDelete);
             return ResponseEntity.ok().body("Purchase canceled successfully");
         } else {
-            throw new BadRequestException("UserID "+userId+" don't have"+" lottery number "+ticketId);
+            throw new BadRequestException("UserID"+userId+"don't have"+"lottery number "+ticketId);
         }
     }
 }
